@@ -31,11 +31,13 @@ let mousePosition = { x: 0, y: 0 };
 let initialMousePosition = { x: 0, y: 0 };
 let x = 150;
 let y = 150;
+let dx = 0;
+let dy = 0;
 const circle = new Circle(x, y, 50);
 
 const isMouseInsideCircle = (mouseX: number, mouseY: number) => {
-  const dx = mouseX - circle.x;
-  const dy = mouseY - circle.y;
+  dx = mouseX - circle.x;
+  dy = mouseY - circle.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
 
   return distance < circle.radius;
@@ -45,14 +47,17 @@ const loop = () => {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (isMouseDown && !isMouseDownInsideCircle && isMouseInsideCircle(initialMousePosition.x, initialMousePosition.y)) {
-     isMouseDownInsideCircle = true;
+  if (
+    isMouseDown &&
+    !isMouseDownInsideCircle &&
+    isMouseInsideCircle(initialMousePosition.x, initialMousePosition.y)
+  ) {
+    isMouseDownInsideCircle = true;
   }
- 
+
   if (isMouseDown && isMouseDownInsideCircle) {
-// don't center the circle on the mouse, but on the initial mouse position
-    x = initialMousePosition.x + mousePosition.x - initialMousePosition.x;
-    y = initialMousePosition.y + mousePosition.y - initialMousePosition.y;   
+    x = mousePosition.x - dx;
+    y = mousePosition.y - dy;
   }
 
   circle.x = x;
